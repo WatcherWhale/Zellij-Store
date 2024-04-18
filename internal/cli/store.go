@@ -21,13 +21,16 @@ var storeCommand cli.Command = cli.Command{
 func storeCommandAction(ctx *cli.Context) error {
 	envSaves := ctx.Args().Slice()
 
-	storeMap := map[string]string{}
+	storeMap, err := store.LoadStore(ctx.String("session"))
+	if err != nil {
+		return err
+	}
 
 	for _, env := range envSaves {
 		storeMap[env] = os.Getenv(env)
 	}
 
-	err := store.SaveStore(ctx.String("session"), storeMap)
+	err = store.SaveStore(ctx.String("session"), storeMap)
 	if err != nil {
 		return err
 	}

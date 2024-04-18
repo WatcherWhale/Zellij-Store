@@ -42,6 +42,10 @@ func LoadStore(session string) (StoreMap, error) {
 		return nil, err
 	}
 
+	if _, err := os.Stat(storePath); os.IsNotExist(err) {
+		return StoreMap{}, nil
+	}
+
 	jsonBytes, err := os.ReadFile(storePath)
 	if err != nil {
 		return nil, err
